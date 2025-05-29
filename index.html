@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Omise Demo (API v2)</title>
-  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -12,16 +12,16 @@
 
   <div>
     <label>Omise Public Key (gatewayMerchantId):</label><br/>
-    <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40"/><br/><br/>
+    <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40"/><br/>
 
     <label>Merchant ID:</label><br/>
-    <input type="text" id="merchantId" value="0123456789" /><br/><br/>
+    <input type="text" id="merchantId" value="0123456789" /><br/>
 
     <label>Environment:</label><br/>
     <select id="env">
       <option value="TEST" selected>TEST</option>
       <option value="PRODUCTION">PRODUCTION</option>
-    </select><br/><br/>
+    </select><br/>
 
     <button onclick="initGooglePay()">Load Google Pay Button</button>
   </div>
@@ -29,10 +29,14 @@
   <hr/>
 
   <div id="container"></div>
-  <div id="result"></div>
 
-  <!-- Load Google Pay JS -->
+  <h3>Generated Payload</h3>
+  <div id="payloadContainer">
+    <pre><code id="payloadOutput"></code></pre>
+    <button id="copyPayloadBtn" style="display: none;">📋 Copy to Clipboard</button>
+  </div>
+
   <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
-  <script src="index.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

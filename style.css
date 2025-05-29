@@ -1,0 +1,98 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 30px;
+  background: #f9fafb;
+  color: #333;
+}
+
+h2, h3 {
+  font-weight: 600;
+  color: #222;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #444;
+}
+
+input, select {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 15px;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+  user-select: none;
+}
+
+button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 5px 12px rgba(0, 86, 179, 0.5);
+}
+
+#container {
+  margin-top: 25px;
+}
+
+#payloadContainer {
+  margin-top: 30px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  max-width: 650px;
+  word-break: break-word;
+}
+
+#payloadOutput {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+  color: #2c3e50;
+}
+
+#copyPayloadBtn {
+  margin-top: 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+  transition: background-color 0.3s ease;
+  user-select: none;
+  display: inline-block;
+}
+
+#copyPayloadBtn:hover {
+  background-color: #1e7e34;
+  box-shadow: 0 5px 12px rgba(30, 126, 52, 0.5);
+}
