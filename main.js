@@ -47,7 +47,7 @@ function initGooglePay() {
     },
     merchantInfo: {
       merchantId,
-      merchantName: 'Test Merchant'
+      merchantName: 'Merchant'
     }
   };
 
