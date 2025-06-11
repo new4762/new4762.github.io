@@ -15,7 +15,10 @@
     <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40"/><br/>
 
     <label>Merchant ID:</label><br/>
-    <input type="text" id="merchantId" value="0123456789" /><br/>
+    <input type="text" id="merchantId" value="BCR2DN7TRCO43HJ7" /><br/>
+
+    <label>Amount (THB):</label><br/>
+    <input type="number" id="amount" value="35.00" step="0.01" min="0"/><br/>
 
     <label>Environment:</label><br/>
     <select id="env">
@@ -23,13 +26,9 @@
       <option value="PRODUCTION">PRODUCTION</option>
     </select><br/>
 
-       <p>Click <strong>Load Google Pay Button</strong> to refresh Google Pay with the latest settings.</p>
+    <p>Click <strong>Load Google Pay Button</strong> to refresh Google Pay with the latest settings.</p>
     <button onclick="initGooglePay()">Load Google Pay Button</button>
   </div>
-<section>
-  <h3>Premium Access</h3>
-  <p>Enjoy full access to our digital services for just <strong>THB 35.00</strong>.</p>
-</section>
   <hr/>
 
   <div id="container"></div>

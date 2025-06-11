@@ -4,6 +4,7 @@ function initGooglePay() {
   const gatewayMerchantId = document.getElementById("gatewayKey").value.trim();
   const merchantId = document.getElementById("merchantId").value.trim();
   const environment = document.getElementById("env").value;
+  const amount = document.getElementById("amount").value.trim();
 
   if (!gatewayMerchantId || !merchantId) {
     alert("Please fill in both Omise Public Key and Merchant ID.");
@@ -43,7 +44,7 @@ function initGooglePay() {
     transactionInfo: {
       currencyCode: 'THB',
       totalPriceStatus: 'FINAL',
-      totalPrice: '35.00'
+      totalPrice: amount
     },
     merchantInfo: {
       merchantId,
