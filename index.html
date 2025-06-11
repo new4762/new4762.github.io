@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Omise (API v2)</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <h2>Omise (API v2)</h2>
 
   <div>
-    <label>Omise Public Key (gatewayMerchantId):</label><br/>
-    <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40"/><br/>
+    <label>Omise Public Key (gatewayMerchantId):</label><br />
+    <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40" /><br />
 
-    <label>Merchant ID:</label><br/>
-    <input type="text" id="merchantId" value="BCR2DN7TRCO43HJ7" /><br/>
+    <label>Merchant ID:</label><br />
+    <small style="color: gray;">This Merchant ID is bound to the website and cannot be changed.</small><br />
+    <input type="text" id="merchantId" value="BCR2DN7TRCO43HJ7" disabled /><br />
 
-    <label>Environment:</label><br/>
+    <label>Environment:</label><br />
     <select id="env">
       <option value="TEST" selected>TEST</option>
       <option value="PRODUCTION">PRODUCTION</option>
-    </select><br/>
+    </select><br />
 
     <p>Click <strong>Load Google Pay Button</strong> to refresh Google Pay with the latest settings.</p>
     <button onclick="initGooglePay()">Load Google Pay Button</button>
   </div>
-  <hr/>
+  <hr />
 
   <div id="container"></div>
   <h3>Generated Payload</h3>
@@ -38,4 +41,5 @@
   <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
   <script src="main.js"></script>
 </body>
+
 </html>
