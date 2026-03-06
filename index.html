@@ -10,36 +10,108 @@
 
 <body>
 
-  <h2>Omise (API v2)</h2>
+  <h2>Google Pay + Omise.js Test Console</h2>
 
-  <div>
-    <label>Omise Public Key (gatewayMerchantId):</label><br />
-    <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40" /><br />
-
-    <label>Merchant ID:</label><br />
-    <small style="color: gray;">This Merchant ID is bound to the website and cannot be changed.</small><br />
-    <input type="text" id="merchantId" value="BCR2DN7TRCO43HJ7" disabled /><br />
-
-    <label>Environment:</label><br />
-    <select id="env">
-      <option value="TEST" selected>TEST</option>
-      <option value="PRODUCTION">PRODUCTION</option>
-    </select><br />
-
-    <p>Click <strong>Load Google Pay Button</strong> to refresh Google Pay with the latest settings.</p>
-    <button onclick="initGooglePay()">Load Google Pay Button</button>
+  <div class="tabs" role="tablist" aria-label="Payment test tabs">
+    <button id="tabGoogle" class="tab-button active" data-tab="google" role="tab" aria-selected="true"
+      aria-controls="panelGoogle">
+      Google pay.js
+    </button>
+    <button id="tabOmise" class="tab-button" data-tab="omise" role="tab" aria-selected="false"
+      aria-controls="panelOmise">
+      Omise.js Google Pay
+    </button>
   </div>
-  <hr />
 
-  <div id="container"></div>
-  <h3>Generated Payload</h3>
-  <div id="payloadContainer">
-    <pre><code id="payloadOutput"></code></pre>
-    <button id="copyPayloadBtn" style="display: none;">📋 Copy to Clipboard</button>
-  </div>
+  <section id="panelGoogle" class="tab-panel active" role="tabpanel" aria-labelledby="tabGoogle">
+    <div>
+      <label>Omise Public Key (gatewayMerchantId):</label><br />
+      <input type="text" id="gatewayKey" value="pkey_test_XXXXXXXXXXXXXX" size="40" /><br />
+
+      <label>Merchant ID:</label><br />
+      <small class="hint">This Merchant ID is bound to the website and cannot be changed.</small><br />
+      <input type="text" id="merchantId" value="BCR2DN7TRCO43HJ7" disabled /><br />
+
+      <label>Environment:</label><br />
+      <select id="env">
+        <option value="TEST" selected>TEST</option>
+        <option value="PRODUCTION">PRODUCTION</option>
+      </select><br />
+
+      <p>Click <strong>Load Google Pay Button</strong> to refresh Google Pay with the latest settings.</p>
+      <button onclick="initGooglePay()">Load Google Pay Button</button>
+    </div>
+    <hr />
+
+    <div id="googleContainer"></div>
+    <h3>Google Token Payload</h3>
+    <div class="output-container">
+      <pre><code id="googlePayloadOutput"></code></pre>
+      <div class="action-row">
+        <button id="copyGooglePayloadBtn" class="secondary" style="display: none;">Copy Payload</button>
+        <button id="useTokenInCustomBtn" class="secondary" style="display: none;" onclick="sendGoogleTokenToOmiseCustom()">
+          Use Token in Omise Custom
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="panelOmise" class="tab-panel" role="tabpanel" aria-labelledby="tabOmise" hidden>
+    <div>
+      <label>Omise.js CDN Mode:</label><br />
+      <select id="omiseCdnMode">
+        <option value="STAGING" selected>STAGING</option>
+        <option value="PRODUCTION">PRODUCTION</option>
+      </select><br />
+      <small id="omiseScriptStatus" class="hint">Omise.js is not loaded yet.</small><br />
+
+      <label>Omise Public Key:</label><br />
+      <input type="text" id="omisePublicKey" value="pkey_test_XXXXXXXXXXXXXX" size="40" /><br />
+      <p class="token-only-note"><strong>Token-only:</strong> This section creates tokens only and never creates charges.</p>
+    </div>
+
+    <div class="subtabs" role="tablist" aria-label="Omise.js modes">
+      <button id="modePrebuiltTab" class="subtab-button active" data-omise-mode="prebuilt" role="tab"
+        aria-selected="true" aria-controls="modePrebuiltPanel">
+        Pre-built Form
+      </button>
+      <button id="modeCustomTab" class="subtab-button" data-omise-mode="custom" role="tab" aria-selected="false"
+        aria-controls="modeCustomPanel">
+        Non Pre-built (createToken)
+      </button>
+    </div>
+
+    <div id="modePrebuiltPanel" class="mode-panel active" role="tabpanel" aria-labelledby="modePrebuiltTab">
+      <label>Google Pay Merchant ID (data-googlepay-merchant-id):</label><br />
+      <input type="text" id="omiseGooglePayMerchantId" value="BCR2DN7TRCO43HJ7" readonly /><br />
+
+      <label>Amount (THB):</label><br />
+      <input type="text" id="omiseAmountTHB" value="35.00" /><br />
+
+      <button onclick="openOmiseGooglePayPrebuilt()">Open Omise.js Google Pay (Token Only)</button>
+    </div>
+
+    <div id="modeCustomPanel" class="mode-panel" role="tabpanel" aria-labelledby="modeCustomTab" hidden>
+      <label>Google Pay Token (tokenizationData.token):</label><br />
+      <textarea id="omiseGooglePayTokenInput" rows="8"
+        placeholder='Paste tokenizationData.token from Google Pay payload'></textarea><br />
+
+      <button onclick="createOmiseGooglePayTokenCustom()">Create Token via Omise.createToken</button>
+    </div>
+    <hr />
+
+    <h3>Omise.js Token Result</h3>
+    <div class="output-container">
+      <pre><code id="omiseResponseOutput"></code></pre>
+      <button id="copyOmiseResponseBtn" class="secondary" style="display: none;">Copy Response</button>
+    </div>
+  </section>
 
   <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
-  <script src="main.js"></script>
+  <script src="shared-ui.js"></script>
+  <script src="google-pay-flow.js"></script>
+  <script src="omise-prebuilt-flow.js"></script>
+  <script src="omise-custom-flow.js"></script>
 </body>
 
 </html>
