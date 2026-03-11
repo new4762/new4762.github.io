@@ -1,6 +1,5 @@
 function openOmiseGooglePayPrebuilt() {
-  if (!window.OmiseCard) {
-    alert("OmiseCard is not loaded.");
+  if (!ensureOmiseSdkReady("OmiseCard")) {
     return;
   }
 

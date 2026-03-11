@@ -1,6 +1,5 @@
 function createOmiseGooglePayTokenCustom() {
-  if (!window.Omise) {
-    alert("Omise.js is not loaded.");
+  if (!ensureOmiseSdkReady("Omise")) {
     return;
   }
 
