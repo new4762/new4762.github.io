@@ -1,11 +1,6 @@
 let paymentsClient = null;
 
 function initGooglePay() {
-  if (!window.google || !google.payments || !google.payments.api) {
-    alert("Google Pay script is not ready yet. Please try again.");
-    return;
-  }
-
   const gatewayMerchantId = document.getElementById("gatewayKey").value.trim();
   const merchantId = document.getElementById("merchantId").value.trim();
   const environment = document.getElementById("env").value;
@@ -16,15 +11,15 @@ function initGooglePay() {
   }
 
   const tokenizationSpecification = {
-    type: "PAYMENT_GATEWAY",
+    type: 'PAYMENT_GATEWAY',
     parameters: {
-      gateway: "omise",
+      gateway: 'omise',
       gatewayMerchantId
     }
   };
 
   const baseCardPaymentMethod = {
-    type: "CARD",
+    type: 'CARD',
     parameters: {
       allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
       allowedCardNetworks: ["AMEX", "JCB", "MASTERCARD", "VISA"],
@@ -46,63 +41,66 @@ function initGooglePay() {
   const paymentDataRequest = {
     ...baseRequest,
     transactionInfo: {
-      currencyCode: "THB",
-      totalPriceStatus: "FINAL",
-      totalPrice: "35.00"
+      currencyCode: 'THB',
+      totalPriceStatus: 'FINAL',
+      totalPrice: '35.00'
     },
     merchantInfo: {
       merchantId,
-      merchantName: "Merchant"
+      merchantName: 'Merchant'
     }
   };
 
   paymentsClient = new google.payments.api.PaymentsClient({ environment });
 
   paymentsClient.isReadyToPay(baseRequest)
-    .then((response) => {
+    .then(response => {
       if (response.result) {
         const button = paymentsClient.createButton({
           onClick: () => {
             paymentsClient.loadPaymentData(paymentDataRequest)
-              .then((paymentData) => handleGooglePaySuccess(paymentData))
-              .catch((error) => {
-                console.error(error);
-                alert("Payment failed: " + JSON.stringify(error));
+              .then(paymentData => handlePaymentSuccess(paymentData))
+              .catch(err => {
+                console.error(err);
+                alert("Payment failed: " + JSON.stringify(err));
               });
           }
         });
-
-        const container = document.getElementById("googleContainer");
+        const container = document.getElementById("container");
         container.innerHTML = "";
         container.appendChild(button);
       } else {
         alert("Google Pay is not available.");
       }
     })
-    .catch((error) => {
-      console.error(error);
-      alert("Error initializing Google Pay: " + error);
+    .catch(err => {
+      console.error(err);
+      alert("Error initializing Google Pay: " + err);
     });
 }
 
-function handleGooglePaySuccess(paymentData) {
+function handlePaymentSuccess(paymentData) {
   const tokenStr = paymentData.paymentMethodData.tokenizationData.token;
-  window.TestConsoleState.latestGoogleToken = tokenStr;
+  let payload;
 
-  let formatted = tokenStr;
   try {
-    const parsed = JSON.parse(tokenStr);
-    formatted = JSON.stringify(parsed, null, 2);
-  } catch (error) {
-    console.warn("Google Pay token is not JSON. Using raw token.", error);
+    payload = JSON.stringify(JSON.parse(tokenStr));
+  } catch (e) {
+    payload = tokenStr; // fallback to raw token if parsing fails
   }
 
-  const outputElem = document.getElementById("googlePayloadOutput");
+  const formatted = typeof payload === "string"
+    ? payload
+    : JSON.stringify(payload, null, 2);
+
+  const outputElem = document.getElementById("payloadOutput");
   outputElem.textContent = formatted;
 
-  const copyBtn = document.getElementById("copyGooglePayloadBtn");
+  const copyBtn = document.getElementById("copyPayloadBtn");
   copyBtn.style.display = "inline-block";
-
-  const useTokenBtn = document.getElementById("useTokenInCustomBtn");
-  useTokenBtn.style.display = "inline-block";
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(formatted)
+      // .then(() => alert("Copied to clipboard!"))
+      .catch(err => alert("Copy failed: " + err));
+  };
 }
