@@ -1,10 +1,7 @@
 window.TestConsoleState = {
   latestGoogleToken: "",
   omiseCdnMode: "STAGING",
-  omiseCdnUrl: "",
-  omiseScriptReady: false,
-  omiseScriptLoading: false,
-  omiseLoadSeq: 0
+  omiseCdnUrl: ""
 };
 
 const OMISE_CDN_URLS = {
@@ -85,15 +82,9 @@ function loadOmiseScriptByMode(mode) {
   const normalizedMode = mode === "PRODUCTION" ? "PRODUCTION" : "STAGING";
   const scriptUrl = OMISE_CDN_URLS[normalizedMode];
   const statusElem = document.getElementById("omiseScriptStatus");
-  const loadSeq = window.TestConsoleState.omiseLoadSeq + 1;
-  window.TestConsoleState.omiseLoadSeq = loadSeq;
 
   window.TestConsoleState.omiseCdnMode = normalizedMode;
   window.TestConsoleState.omiseCdnUrl = scriptUrl;
-  window.TestConsoleState.omiseScriptReady = false;
-  window.TestConsoleState.omiseScriptLoading = true;
-
-  clearOmiseOutput();
 
   if (statusElem) {
     statusElem.classList.remove("status-ok", "status-error");
@@ -104,81 +95,27 @@ function loadOmiseScriptByMode(mode) {
   if (existingScript) existingScript.remove();
 
   // Ensure subsequent calls use the newly selected CDN build.
-  delete window.Omise;
-  delete window.OmiseCard;
+  window.Omise = undefined;
+  window.OmiseCard = undefined;
 
   const script = document.createElement("script");
   script.id = "omiseRuntimeScript";
-  script.src = scriptUrl + "?mode=" + normalizedMode.toLowerCase() + "&ts=" + Date.now();
+  script.src = scriptUrl;
   script.async = true;
   script.onload = () => {
-    if (window.TestConsoleState.omiseLoadSeq !== loadSeq) return;
-    window.TestConsoleState.omiseScriptLoading = false;
-    window.TestConsoleState.omiseScriptReady = true;
-    rerenderOmiseFormsForSelectedMode();
-    if (statusElem) {
-      statusElem.classList.remove("status-error");
-      statusElem.classList.add("status-ok");
-      statusElem.textContent = "Loaded " + normalizedMode + " Omise.js (form refreshed)";
-    }
+    if (!statusElem) return;
+    statusElem.classList.remove("status-error");
+    statusElem.classList.add("status-ok");
+    statusElem.textContent = "Loaded " + normalizedMode + " Omise.js";
   };
   script.onerror = () => {
-    if (window.TestConsoleState.omiseLoadSeq !== loadSeq) return;
-    window.TestConsoleState.omiseScriptLoading = false;
-    window.TestConsoleState.omiseScriptReady = false;
-    if (statusElem) {
-      statusElem.classList.remove("status-ok");
-      statusElem.classList.add("status-error");
-      statusElem.textContent = "Failed to load Omise.js from " + scriptUrl;
-    }
+    if (!statusElem) return;
+    statusElem.classList.remove("status-ok");
+    statusElem.classList.add("status-error");
+    statusElem.textContent = "Failed to load Omise.js from " + scriptUrl;
   };
 
   document.body.appendChild(script);
-}
-
-function clearOmiseOutput() {
-  const output = document.getElementById("omiseResponseOutput");
-  const copyBtn = document.getElementById("copyOmiseResponseBtn");
-  if (output) output.textContent = "";
-  if (copyBtn) copyBtn.style.display = "none";
-}
-
-function ensureOmiseSdkReady(requiredGlobal) {
-  if (window.TestConsoleState.omiseScriptLoading) {
-    alert("Omise.js is still loading. Please wait for 'Loaded ... Omise.js'.");
-    return false;
-  }
-
-  if (!window.TestConsoleState.omiseScriptReady) {
-    alert("Omise.js is not loaded. Select CDN mode and wait until loaded.");
-    return false;
-  }
-
-  if (requiredGlobal === "OmiseCard" && !window.OmiseCard) {
-    alert("OmiseCard API is not available after loading script.");
-    return false;
-  }
-
-  if (requiredGlobal === "Omise" && !window.Omise) {
-    alert("Omise API is not available after loading script.");
-    return false;
-  }
-
-  return true;
-}
-
-function rerenderOmiseFormsForSelectedMode() {
-  const customTab = document.getElementById("modeCustomTab");
-  if (!customTab) return;
-
-  const activeMode = customTab.classList.contains("active") ? "custom" : "prebuilt";
-  const alternateMode = activeMode === "prebuilt" ? "custom" : "prebuilt";
-
-  // Force mode panel refresh so newly loaded CDN script is used on next open.
-  switchOmiseMode(alternateMode);
-  requestAnimationFrame(() => {
-    switchOmiseMode(activeMode);
-  });
 }
 
 function switchOmiseMode(mode) {
